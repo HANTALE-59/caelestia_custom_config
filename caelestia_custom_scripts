@@ -1,0 +1,49 @@
+#!/bin/bash
+
+CONFIG="$HOME/.config/caelestia/shell.json"
+DECORATION_FILE="$HOME/.config/caelestia/hypr-user.conf"
+
+# ⚠️ Chemin EXACTEMENT comme dans ton fichier (avec $HOME non expansé)
+BLACK_WHITE_TARGET='screen_shader = $HOME/.config/hypr/custom/BWshader.glsl'
+
+case "$1" in
+  black_white)
+    # 🔍 Si la ligne est commentée → décommenter
+    if grep -q "^[[:space:]]*#${BLACK_WHITE_TARGET}" "$DECORATION_FILE"; then
+      sed -i "s|^[[:space:]]*#${BLACK_WHITE_TARGET}|    ${BLACK_WHITE_TARGET}|" "$DECORATION_FILE"
+      echo "Shader activé (ligne décommentée)."
+
+    # 🔍 Si la ligne est active → commenter
+    elif grep -q "^[[:space:]]*${BLACK_WHITE_TARGET}" "$DECORATION_FILE"; then
+      sed -i "s|^[[:space:]]*${BLACK_WHITE_TARGET}|    #${BLACK_WHITE_TARGET}|" "$DECORATION_FILE"
+      echo "Shader désactivé (ligne commentée)."
+
+    else
+      echo "❌ Impossible de trouver la ligne du shader !"
+    fi
+    ;;
+  transp)
+    current=$(jq '.appearance.transparency.enabled' "$CONFIG")
+    if [ "$current" = "true" ]; then
+      jq '.appearance.transparency.enabled = false' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      echo "🔲 Transparency désactivée"
+    else
+      jq '.appearance.transparency.enabled = true' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      echo "🟦 Transparency activée"
+    fi
+    ;;
+  bar)
+    current=$(jq '.bar.persistent' "$CONFIG")
+    if [ "$current" = "true" ]; then
+      jq '.bar.persistent = false' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      echo "🔲 Barre masquée"
+    else
+      jq '.bar.persistent = true' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      echo "🟦 Barre affichée"
+    fi
+    ;;
+  *)
+    echo "Usage : $0 [transp|bar|black_white]"
+    exit 1
+    ;;
+esac
