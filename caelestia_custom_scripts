@@ -11,12 +11,14 @@ case "$1" in
     # 🔍 Si la ligne est commentée → décommenter
     if grep -q "^[[:space:]]*#${BLACK_WHITE_TARGET}" "$DECORATION_FILE"; then
       sed -i "s|^[[:space:]]*#${BLACK_WHITE_TARGET}|    ${BLACK_WHITE_TARGET}|" "$DECORATION_FILE"
-      echo "Shader activé (ligne décommentée)."
+      jq '(.launcher.actions[] | select(.name=="B & W") | .icon) = "contrast_rtl_off"' \
+         "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
 
     # 🔍 Si la ligne est active → commenter
     elif grep -q "^[[:space:]]*${BLACK_WHITE_TARGET}" "$DECORATION_FILE"; then
       sed -i "s|^[[:space:]]*${BLACK_WHITE_TARGET}|    #${BLACK_WHITE_TARGET}|" "$DECORATION_FILE"
-      echo "Shader désactivé (ligne commentée)."
+      jq '(.launcher.actions[] | select(.name=="B & W") | .icon) = "contrast"' \
+         "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
 
     else
       echo "❌ Impossible de trouver la ligne du shader !"

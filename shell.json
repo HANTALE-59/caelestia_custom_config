@@ -26,7 +26,7 @@
       "scale": 1
     },
     "transparency": {
-      "enabled": true,
+      "enabled": false,
       "base": 0.6,
       "layers": 0.2
     }
@@ -230,7 +230,7 @@
       },
       {
         "name": "B & W",
-        "icon": "visibility_off",
+        "icon": "contrast",
         "description": "Toogle Black & White",
         "command": [
           "/usr/local/bin/caelestia_custom_scripts",
@@ -241,7 +241,7 @@
       },
       {
         "name": "Transparency",
-        "icon": "invert_colors_off",
+        "icon": "invert_colors",
         "description": "Change shell transparency",
         "command": [
           "/usr/local/bin/caelestia_custom_scripts",
@@ -285,7 +285,7 @@
       },
       {
         "name": "Transparency",
-        "icon": "invert_colors_off",
+        "icon": "invert_colors",
         "description": "Change shell transparency",
         "command": [
           "autocomplete",
