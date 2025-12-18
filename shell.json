@@ -241,7 +241,7 @@
       },
       {
         "name": "Transparency",
-        "icon": "invert_colors",
+        "icon": "invert_colors_off",
         "description": "Change shell transparency",
         "command": [
           "/usr/local/bin/caelestia_custom_scripts",
@@ -285,7 +285,7 @@
       },
       {
         "name": "Transparency",
-        "icon": "invert_colors",
+        "icon": "invert_colors_off",
         "description": "Change shell transparency",
         "command": [
           "autocomplete",
@@ -402,7 +402,11 @@
     "hiddenApps": []
   },
   "lock": {
-    "recolourLogo": true
+    "recolourLogo": true,
+    "sizes": {
+      "centerWidth": 700,
+      "heightMult": 0.9
+    }
   },
   "notifs": {
     "actionOnClick": true,
@@ -418,10 +422,11 @@
     "hideDelay": 2000
   },
   "paths": {
-    "_mediaGif": "/home/natha/Pictures/dancing2.5.gif",
-    "mediaGif": "root:/assets/bongocat.gif",
-    "sessionGif": "root:/assets/kurukuru.gif",
-    "_wallpaperDir": "~/Pictures/Wallpapers/"
+    "_mediaGif": "~/.config/caelestia/gifs/transparent-happy.gif",
+    "mediaGif": "~/.config/caelestia/gifs/dancing4.gif",
+    "sessionGif": "~/.config/caelestia/gifs/arch3.gif",
+    "_sessionGif": "root:/assets/kurukuru.gif",
+    "__wallpaperDir": "~/Pictures/Wallpapers/"
   },
   "services": {
     "audioIncrement": 0.1,
@@ -449,6 +454,9 @@
     "visualiserBars": 45
   },
   "session": {
+    "sizes": {
+      "button": 150
+    },
     "dragThreshold": 30,
     "enabled": true,
     "vimKeybinds": false,

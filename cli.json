@@ -30,10 +30,10 @@
             }
         },
         "music": {
-            "deezer": {
+            "deezer-desktop": {
                 "enable": true,
                 "match": [{ "class": "deezer-desktop" }],
-                "command": ["deezer-desktop"],
+                "command": ["deezer-desktop", "--wayland"],
                 "move": true
             }
         },
@@ -41,7 +41,7 @@
             "btop": {
                 "enable": true,
                 "match": [{ "class": "btop", "title": "btop", "workspace": { "name": "special:sysmon" } }],
-                "command": ["foot", "-a", "btop", "-T", "btop", "fish", "-C", "exec btop"]
+                "command": ["footclient", "-a", "btop", "-T", "btop", "fish", "-C", "exec btop"]
             }
         },
         "todo": {
@@ -56,7 +56,7 @@
             "beeper": {
                 "enable": true,
                 "match": [{ "class": "BeeperTexts" }],
-                "command": ["beeper", "--disable-gpu", "--no-sandbox"],
+                "command": ["beeper", "--disable-gpu", "--no-sandbox", "--wayland"],
                 "move": true
             }
         }

@@ -11,12 +11,14 @@ case "$1" in
     # 🔍 Si la ligne est commentée → décommenter
     if grep -q "^[[:space:]]*#${BLACK_WHITE_TARGET}" "$DECORATION_FILE"; then
       sed -i "s|^[[:space:]]*#${BLACK_WHITE_TARGET}|    ${BLACK_WHITE_TARGET}|" "$DECORATION_FILE"
+      sleep 0.5
       jq '(.launcher.actions[] | select(.name=="B & W") | .icon) = "contrast_rtl_off"' \
          "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
 
     # 🔍 Si la ligne est active → commenter
     elif grep -q "^[[:space:]]*${BLACK_WHITE_TARGET}" "$DECORATION_FILE"; then
       sed -i "s|^[[:space:]]*${BLACK_WHITE_TARGET}|    #${BLACK_WHITE_TARGET}|" "$DECORATION_FILE"
+      sleep 0.5
       jq '(.launcher.actions[] | select(.name=="B & W") | .icon) = "contrast"' \
          "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
 
@@ -24,30 +26,36 @@ case "$1" in
       echo "❌ Impossible de trouver la ligne du shader !"
     fi
     ;;
-
   transp)
-  new_state=$(jq '.appearance.transparency.enabled | not' "$CONFIG")
-
-  new_icon=$( [ "$new_state" = "true" ] && echo "invert_colors_off" || echo "invert_colors" )
-
-  jq --arg icon "$new_icon" --argjson state "$new_state" '
-    .appearance.transparency.enabled = $state
-    | (.launcher.actions[] | select(.name=="Transparency") | .icon) = $icon
-  ' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
-  ;;
-
-
+    current=$(jq '.appearance.transparency.enabled' "$CONFIG")
+    if [ "$current" = "true" ]; then
+      jq '.appearance.transparency.enabled = false' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      sleep 0.5
+      jq '(.launcher.actions[] | select(.name=="Transparency") | .icon) = "invert_colors_off"' \
+         "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+    else
+      jq '.appearance.transparency.enabled = true' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      sleep 0.5
+      jq '(.launcher.actions[] | select(.name=="Transparency") | .icon) = "invert_colors"' \
+         "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+    fi
+    ;;
   bar)
-  new_state=$(jq '.bar.persistent | not' "$CONFIG")
+    current=$(jq '.bar.persistent' "$CONFIG")
+    if [ "$current" = "true" ]; then
+      jq '.bar.persistent = false' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      sleep 0.5
+      jq '(.launcher.actions[] | select(.name=="Bar") | .icon) = "left_panel_open"' \
+         "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
 
-  new_icon=$( [ "$new_state" = "true" ] && echo "right_panel_open" || echo "left_panel_open" )
+    else
 
-  jq --arg icon "$new_icon" --argjson state "$new_state" '
-    .bar.persistent = $state
-    | (.launcher.actions[] | select(.name=="Bar") | .icon) = $icon
-  ' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
-  ;;
-
+      jq '.bar.persistent = true' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+      sleep 0.5
+      jq '(.launcher.actions[] | select(.name=="Bar") | .icon) = "right_panel_open"' \
+         "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+    fi
+    ;;
   *)
     echo "Usage : $0 [transp|bar|black_white]"
     exit 1
